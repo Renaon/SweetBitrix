@@ -30,14 +30,16 @@ class DBConnect extends Entity\DataManager {
         $connect = Application::getConnection();
         $this->connect = $connect;
         $sqlHelper = $connect->getSqlHelper();
-//        $this->createUser('mrs_addams', 'Martizia', 'Addams', 'addams@gmail.com');
-        $this->searchCard('739f3250-53d7-11eb-a2cb-704d7b28f39a');
+
     }
 
-    public function createUser($login, $name, $lastname, $email = null){
-        if(!$this->searchUser())
-        $sql = "INSERT INTO b_user(LOGIN,NAME,LAST_NAME, EMAIL) VALUES('$login', '$name', '$lastname', '$email');";
-        $recordset = $this->connect->query($sql);
+    public function createUser($login, $email = null){
+        var_dump($login);
+//        if($this->searchUser($login)) {
+//            $sql = "INSERT INTO b_user(LOGIN,NAME,LAST_NAME, EMAIL) VALUES('$login', '$name', '$lastname', '$email');";
+//            $recordset = $this->connect->query($sql);
+//        }
+//        else return;
     }
 
     public function dropUser($login){
@@ -59,8 +61,8 @@ class DBConnect extends Entity\DataManager {
         }
     }
 
-    private function searchUser($name){
-        $sql = "SELECT ID FROM b_loyality WHERE SALE_ID = '$user_id';";
+    private function searchUser($login){
+        $sql = "SELECT ID FROM b_user WHERE LOGIN = '$login';";
         $recordset = $this->connect->query($sql);
         while ($record = $recordset->fetch(\Bitrix\Main\Text\Converter::getHtmlConverter()))
         {

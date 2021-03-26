@@ -23,6 +23,15 @@ class Main
     $pain = new GetBonuce($connect->connect1C('http://172.16.20.113:80/testing_sailing/ws/ITFDiscountService.1cws'));
 
     $pain->getAllData();
+    $querr = new DBConnect();
+    $nums_users = $pain->getSize();
+    $logins = $pain->getLogin();
+//    var_dump($names);
+
+    for($i = 0; $i<$nums_users; $i++){
+        echo("АХ ТЫ ХУИЛА");
+        $querr->createUser($logins[$i]);
+    }
 
     }
 }

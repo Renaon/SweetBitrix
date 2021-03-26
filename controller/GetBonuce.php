@@ -12,6 +12,7 @@
         private $card_names = array();
         private $phone_numbers = array();
         private $cards_balance = array();
+        private $arr_size;
 
         public function __construct($client)
         {
@@ -45,7 +46,6 @@
         private function setBalance(){
             $tmp_arr = $this->getBalance();
             $this->cards_balance = $tmp_arr;
-            var_dump($this->cards_balance);
         }
 
         private function setAllData(){
@@ -112,4 +112,13 @@
                 $i++;
             }
         }
+
+        public function getLogin(){
+            return $this->owners;
+        }
+
+        public function getSize(){
+            return count($this->owners);
+        }
+
     }
