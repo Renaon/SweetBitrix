@@ -5,27 +5,9 @@ require ('/home/bitrix/www/bitrix/.settings.php');
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 class DBConnect extends Entity\DataManager {
-    private $login;
-    private $host;
-    private $password;
-    private $db_name;
     private $connect;
 
-//        $this->host = '192.168.1.128';
-//        $this->login = 'bitrix0';
-//        $this->password = 'y+rA3k9-X+up]Z&jJ9j5';
-//        $this->db_name = "sitemanager";
-
-    public static function getTableName()
-    {
-        return 'b_users';
-    }
-
     public function __construct(){
-        $this->host = '192.168.1.128';
-        $this->login = 'bitrix0';
-        $this->password = '5DLQ-U?&3eszk(UCas=C';
-        $this->db_name = "sitemanager";
 
         $connect = Application::getConnection();
         $this->connect = $connect;
@@ -34,12 +16,25 @@ class DBConnect extends Entity\DataManager {
     }
 
     public function createUser($login, $email = null){
-        var_dump($login);
-//        if($this->searchUser($login)) {
-//            $sql = "INSERT INTO b_user(LOGIN,NAME,LAST_NAME, EMAIL) VALUES('$login', '$name', '$lastname', '$email');";
-//            $recordset = $this->connect->query($sql);
-//        }
-//        else return;
+        $login = trim($login);
+        $login = explode(" ", $login);
+        $login = $this->clearArr($login);
+        $name = $login[1];
+        $lastname = $login[0];
+        $enter = $lastname.$name;
+        if(!$this->searchUser($login)) {
+            $sql = "INSERT INTO b_user(LOGIN,NAME,LAST_NAME, EMAIL) VALUES('$enter', '$name', '$lastname', '$email');";
+            $recordset = $this->connect->query($sql);
+        }
+        else return;
+    }
+
+    private function clearArr($array){
+        $tmp = array();
+        for($i = 0; $i<count($array); $i++){
+            if($array[$i] != "") $tmp[] = $array[$i];
+        }
+        return $tmp;
     }
 
     public function dropUser($login){
@@ -53,17 +48,23 @@ class DBConnect extends Entity\DataManager {
     }
 
     private function searchCard($card_id){
-        $sql = "SELECT ID FROM b_loyality WHERE SALE_ID = '$card_id';";
+        $sql = "SELECT ID FROM b_loyality WHERE CARD_ID = '$card_id';";
         $recordset = $this->connect->query($sql);
         while ($record = $recordset->fetch(\Bitrix\Main\Text\Converter::getHtmlConverter()))
         {
             $data[] = $record;
         }
+        if($data != null) return true;
+        else return false;
     }
 
     private function searchUser($login){
-        $sql = "SELECT ID FROM b_user WHERE LOGIN = '$login';";
+        $name = $login[1];
+        $lastname = $login[0];
+        $enter = $lastname.$name;
+        $sql = "SELECT ID FROM b_user WHERE LOGIN = '$enter';";
         $recordset = $this->connect->query($sql);
+        $data = array();
         while ($record = $recordset->fetch(\Bitrix\Main\Text\Converter::getHtmlConverter()))
         {
             $data[] = $record;

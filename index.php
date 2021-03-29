@@ -26,10 +26,8 @@ class Main
     $querr = new DBConnect();
     $nums_users = $pain->getSize();
     $logins = $pain->getLogin();
-//    var_dump($names);
 
-    for($i = 0; $i<$nums_users; $i++){
-        echo("АХ ТЫ ХУИЛА");
+    for($i = 0; $i<$nums_users-1; $i++){
         $querr->createUser($logins[$i]);
     }
 
