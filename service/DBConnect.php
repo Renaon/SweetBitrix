@@ -2,10 +2,12 @@
 use Bitrix\Main\Entity;
 use Bitrix\Main\Application;
 require ('/home/bitrix/www/bitrix/.settings.php');
+require('/home/bitrix/www/bitrix/modules/disnuts/service/addUser.php');
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 class DBConnect extends Entity\DataManager {
     private $connect;
+    private $ID_owners = array();
 
     public function __construct(){
 
@@ -22,12 +24,18 @@ class DBConnect extends Entity\DataManager {
         $name = $login[1];
         $lastname = $login[0];
         $enter = $lastname.$name;
+        $data = array(
+            $enter,
+            $name,
+            $lastname
+        );
         if(!$this->searchUser($login)) {
-            $sql = "INSERT INTO b_user(LOGIN,NAME,LAST_NAME, EMAIL) VALUES('$enter', '$name', '$lastname', '$email');";
-            $recordset = $this->connect->query($sql);
+            $user = new addUser();
+            $user->add($data);
         }
         else return;
     }
+
 
     private function clearArr($array){
         $tmp = array();
@@ -68,14 +76,19 @@ class DBConnect extends Entity\DataManager {
         while ($record = $recordset->fetch(\Bitrix\Main\Text\Converter::getHtmlConverter()))
         {
             $data[] = $record;
+
         }
+        $this->ID_owners = $data;
         if($data != null) return true;
         else return false;
     }
 
-    public function createCard($card_id, $balance = 0,$name){
-        $sql = "INSERT INTO b_loyality(SALE_ID, NAME, VALUE) VALUES('$card_id','$name','$balance');";
-        $recordset = $this->connect->query($sql);
+    public function createCard($card_id, $balance = 0,$name, $id){
+        $id = $this->ID_owners[$id];
+        if(!$this->searchCard($card_id)) {
+            $sql = "INSERT INTO b_loyality(CARD_ID, NAME, BALANCE,USER_ID) VALUES('$card_id','$name','$balance', '$id');";
+            $recordset = $this->connect->query($sql);
+        }
     }
 
 

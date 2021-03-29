@@ -121,4 +121,16 @@
             return count($this->owners);
         }
 
+        public function getCadrIDs(){
+            return $this->arr_id;
+        }
+
+        public function getCardBal(){
+            return $this->cards_balance;
+        }
+
+        public function getCardNames(){
+            return $this->card_names;
+        }
+
     }

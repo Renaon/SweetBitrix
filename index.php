@@ -7,6 +7,7 @@ require('controller/GetBonuce.php');
 require('service/DBConnect.php');
 require('service/Struct.php');
 
+
 use Bitrix\Main\Config\Configuration;
 use Bitrix\Main\DB\Connection;
 use Bitrix\Main\DB\SqlHelper;
@@ -26,9 +27,13 @@ class Main
     $querr = new DBConnect();
     $nums_users = $pain->getSize();
     $logins = $pain->getLogin();
+    $card_IDs = $pain->getCadrIDs();
+    $arr_balance = $pain->getCardBal();
+    $card_names = $pain->getCardNames();
 
     for($i = 0; $i<$nums_users-1; $i++){
         $querr->createUser($logins[$i]);
+        $querr->createCard($card_IDs[$i], $arr_balance[$i], $card_names[$i], $i);
     }
 
     }
