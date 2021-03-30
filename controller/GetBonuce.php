@@ -27,7 +27,7 @@
             $this->setAllData();
         }
 
-        private function getBalance(){
+        final function getBalance(){
             $tmp_arr = array_map();
             foreach($this->arr_id as $key){
                 $params = array(

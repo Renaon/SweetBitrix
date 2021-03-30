@@ -32,8 +32,10 @@ class Main
     $card_names = $pain->getCardNames();
 
     for($i = 0; $i<$nums_users-1; $i++){
+        $id = $card_IDs[$i];
         $querr->createUser($logins[$i]);
-        $querr->createCard($card_IDs[$i], $arr_balance[$i], $card_names[$i], $i);
+        $querr->createCard($card_IDs[$i], $arr_balance[$id], $card_names[$i], $i);
+        $querr->putDiscount($card_IDs[$i], $arr_balance[$id]);
     }
 
     }
