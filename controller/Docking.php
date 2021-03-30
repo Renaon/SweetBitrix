@@ -1,12 +1,9 @@
 <?php
-
-
 ini_set('soap.wsdl_cache_enabled', 0 );
 ini_set('soap.wsdl_cache_ttl', 0);
 
 class Docking{
     protected  $options = array();
-//    private $arrContextOptions;
     private $client;
     protected $sauce;
 
@@ -16,16 +13,6 @@ class Docking{
     {
         $wsdl = $url. '?wsdl';
         $this->sauce = $url;
-//        $this->arrContextOptions=array(
-//            'ssl'=>array(
-//                'verify_peer'=>false,
-//                'verify_peer_name'=>false,
-//                'allow_self_signed' => true
-//            ),
-//            'https' => array(
-//                'curl_verify_ssl_peer'  => false,
-//                'curl_verify_ssl_host'  => false)
-//        );
         return $wsdl;
     }
 
@@ -51,8 +38,6 @@ class Docking{
         }
         return $this->client;
     }
-
-
 
 }
 ?>
