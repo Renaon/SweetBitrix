@@ -6,6 +6,7 @@
         <serverdata>
           <mappings>
             <mapping deploy="/bitrix/modules/disnuts" local="$PROJECT_DIR$" web="/sales" />
+            <mapping deploy="/local/components/sale.order.ajax" local="$PROJECT_DIR$/sale.order.ajax" web="/order" />
           </mappings>
         </serverdata>
       </paths>
