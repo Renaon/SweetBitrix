@@ -5,7 +5,6 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 require('controller/Docking.php');
 require('controller/GetBonuce.php');
 require('service/DBConnect.php');
-require('service/Struct.php');
 
 
 use Bitrix\Main\Config\Configuration;
@@ -16,6 +15,15 @@ use Bitrix\Main\Application;
 
 class Main
 {
+    private $logins;
+    private $card_IDs;
+    private $arr_balance;
+    private $card_names;
+    private $phone_numbers;
+    /**
+     * @var int
+     */
+    private $nums_users;
 
     public function __construct()
     {
@@ -25,18 +33,33 @@ class Main
 
     $pain->getAllData();
     $querr = new DBConnect();
-    $nums_users = $pain->getSize();
-    $logins = $pain->getLogin();
-    $card_IDs = $pain->getCadrIDs();
-    $arr_balance = $pain->getCardBal();
-    $card_names = $pain->getCardNames();
+    $this->setLocData($pain);
+    $this->putDatabase($querr);
 
-    for($i = 0; $i<$nums_users-1; $i++){
-        $id = $card_IDs[$i];
-        $querr->createUser($logins[$i]);
-        $querr->createCard($card_IDs[$i], $arr_balance[$id], $card_names[$i], $i);
-        $querr->putDiscount($card_IDs[$i], $arr_balance[$id]);
+
     }
 
+    private function setLocData($pain){
+        $this->nums_users = $pain->getSize();
+        $this->logins = $pain->getLogin();
+        $this->card_IDs = $pain->getCadrIDs();
+        $this->arr_balance = $pain->getCardBal();
+        $this->card_names = $pain->getCardNames();
+        $this->phone_numbers = $pain->getPhoneNumbers();
+
+    }
+
+    private function putDatabase($querr){
+        for($i = 0; $i<$this->nums_users-1; $i++){
+            $id = $this->card_IDs[$i];
+            $querr->createUser($this->logins[$i]);
+            $querr->createCard($this->card_IDs[$i], $this->arr_balance[$id],
+                $this->card_names[$i], $i, $this->phone_numbers[$i]);
+            $querr->putDiscount($this->card_IDs[$i], $this->arr_balance[$id], $this->phone_numbers[$i]);
+        }
+    }
+
+    private function discActions(){
+        $gd = new getDiscount();
     }
 }

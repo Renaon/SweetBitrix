@@ -50,8 +50,8 @@ class DBConnect extends Entity\DataManager {
 //        $recordset = $this->connect->query($sql);
 //    }
 
-    public function putDiscount($card_id, $balance){
-        $sql = "UPDATE b_loyality SET BALANCE = '$balance' WHERE CARD_ID = '$card_id';";
+    public function putDiscount($card_id, $balance, $phone_number){
+        $sql = "UPDATE b_loyality SET BALANCE = '$balance', PHONE_NUMBER = '$phone_number' WHERE CARD_ID = '$card_id';";
         $recordset = $this->connect->query($sql);
     }
 
@@ -83,12 +83,12 @@ class DBConnect extends Entity\DataManager {
         else return false;
     }
 
-    public function createCard($card_id, $balance,$name, $id){
+    public function createCard($card_id, $balance,$name, $id, $phone_number){
         $id = $this->ID_owners[0]["ID"];
         if(!$this->searchCard($card_id)) {
             $sql = "SET FOREIGN_KEY_CHECKS=0";
             $recordset = $this->connect->query($sql);
-            $sql = "INSERT INTO b_loyality(CARD_ID, NAME, BALANCE,USER_ID) VALUES('$card_id','$name','$balance', '$id');";
+            $sql = "INSERT INTO b_loyality(CARD_ID, NAME, BALANCE,USER_ID, PHONE_NUMBER) VALUES('$card_id','$name','$balance', '$id', '$phone_number');";
             $recordset = $this->connect->query($sql);
         }
     }

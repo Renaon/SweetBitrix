@@ -27,7 +27,8 @@
             $this->setAllData();
         }
 
-        final function getBalance(){
+        final function getBalance(): array
+        {
             $tmp_arr = array_map();
             foreach($this->arr_id as $key){
                 $params = array(
@@ -106,30 +107,41 @@
 
         private function setPhoneNumbers(){
             $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
-            $i = 0;
             foreach($tmp_arr as $key){
-                $this->phone_numbers[$i] = $key->{'НомерТелефона'};
-                $i++;
+                $this->phone_numbers[] = $key->{'НомерТелефона'};
             }
         }
 
-        public function getLogin(){
+        /**
+         * @return array
+         */
+        public function getPhoneNumbers(): array
+        {
+            return $this->phone_numbers;
+        }
+
+        public function getLogin(): array
+        {
             return $this->owners;
         }
 
-        public function getSize(){
+        public function getSize(): int
+        {
             return count($this->owners);
         }
 
-        public function getCadrIDs(){
+        public function getCadrIDs(): array
+        {
             return $this->arr_id;
         }
 
-        public function getCardBal(){
+        public function getCardBal(): array
+        {
             return $this->cards_balance;
         }
 
-        public function getCardNames(){
+        public function getCardNames(): array
+        {
             return $this->card_names;
         }
 
