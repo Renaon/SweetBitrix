@@ -11,7 +11,9 @@ use Bitrix\Main\Localization\Loc;
  * @var SaleOrderAjax $component
  * @var string $templateFolder
  */
-
+/*
+ * Оформление
+ */
 $context = Main\Application::getInstance()->getContext();
 $request = $context->getRequest();
 
@@ -41,7 +43,10 @@ $arParams['EMPTY_BASKET_HINT_PATH'] = isset($arParams['EMPTY_BASKET_HINT_PATH'])
 $arParams['SHOW_BASKET_HEADERS'] = $arParams['SHOW_BASKET_HEADERS'] === 'Y' ? 'Y' : 'N';
 $arParams['HIDE_DETAIL_PAGE_URL'] = isset($arParams['HIDE_DETAIL_PAGE_URL']) && $arParams['HIDE_DETAIL_PAGE_URL'] === 'Y' ? 'Y' : 'N';
 $arParams['DELIVERY_FADE_EXTRA_SERVICES'] = $arParams['DELIVERY_FADE_EXTRA_SERVICES'] === 'Y' ? 'Y' : 'N';
-
+/*
+ *
+ * Параметры купонов
+ */
 $arParams['SHOW_COUPONS'] = isset($arParams['SHOW_COUPONS']) && $arParams['SHOW_COUPONS'] === 'N' ? 'N' : 'Y';
 
 if ($arParams['SHOW_COUPONS'] === 'N')
@@ -56,6 +61,10 @@ else
 	$arParams['SHOW_COUPONS_DELIVERY'] = isset($arParams['SHOW_COUPONS_DELIVERY']) && $arParams['SHOW_COUPONS_DELIVERY'] === 'N' ? 'N' : 'Y';
 	$arParams['SHOW_COUPONS_PAY_SYSTEM'] = isset($arParams['SHOW_COUPONS_PAY_SYSTEM']) && $arParams['SHOW_COUPONS_PAY_SYSTEM'] === 'N' ? 'N' : 'Y';
 }
+/*
+ *
+ * Параметры купонов. Конец
+ */
 
 $arParams['SHOW_NEAREST_PICKUP'] = $arParams['SHOW_NEAREST_PICKUP'] === 'Y' ? 'Y' : 'N';
 $arParams['DELIVERIES_PER_PAGE'] = isset($arParams['DELIVERIES_PER_PAGE']) ? intval($arParams['DELIVERIES_PER_PAGE']) : 9;
@@ -181,7 +190,9 @@ if ($useDefaultMessages || !isset($arParams['MESS_ADDITIONAL_PROPS']))
 {
 	$arParams['MESS_ADDITIONAL_PROPS'] = Loc::getMessage('ADDITIONAL_PROPS_DEFAULT');
 }
-
+/*
+ * Текстовые параметры купонов
+ */
 if ($useDefaultMessages || !isset($arParams['MESS_USE_COUPON']))
 {
 	$arParams['MESS_USE_COUPON'] = Loc::getMessage('USE_COUPON_DEFAULT');
@@ -191,6 +202,10 @@ if ($useDefaultMessages || !isset($arParams['MESS_COUPON']))
 {
 	$arParams['MESS_COUPON'] = Loc::getMessage('COUPON_DEFAULT');
 }
+/*
+ * Тексты купонов конец
+ *
+ */
 
 if ($useDefaultMessages || !isset($arParams['MESS_PERSON_TYPE']))
 {
