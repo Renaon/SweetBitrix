@@ -108,7 +108,7 @@ class DBConnect extends Entity\DataManager {
         else return false;
     }
 
-    private function searchUser($login): bool
+    protected function searchUser($login): bool
     {
         $name = $login[1];
         $lastname = $login[0];

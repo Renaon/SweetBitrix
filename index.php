@@ -1,4 +1,4 @@
-<?php namespace discount_nuts;
+<?php namespace disnuts;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
@@ -7,6 +7,7 @@ require('controller/Docking.php');
 require('controller/GetBonuce.php');
 require('service/DBConnect.php');
 require('controller/getDiscount.php');
+require('service/DeepScore.php');
 
 
 use Bitrix\Main\Config\Configuration;
@@ -14,16 +15,22 @@ use Bitrix\Main\DB\Connection;
 use Bitrix\Main\DB\SqlHelper;
 use Bitrix\Main\DB\Result;
 use Bitrix\Main\Application;
+use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale;
 use CModule;
+use CUser;
 use DBConnect;
+use DeepScore;
 use Docking;
+use ErrorException;
 use GetBonuce;
 use getDiscount;
 
 CModule::IncludeModule("disnuts");
 CModule::IncludeModule("sale");
 CModule::IncludeModule("catalog");
+
+set_error_handler('exceptions_error_handler');
 
 class Disnuts
 {
@@ -37,19 +44,27 @@ class Disnuts
      * @var int
      */
     private $nums_users;
+    private $PHONE_CARD_NUMBER;
 
 
-    public function __construct($sum)
+    public function __construct($price)
     {
-    $this->BASKET_PRICE = $sum;
-    $connect = new Docking();
-    $pain = new GetBonuce($connect->connect1C('http://172.16.20.113:80/testing_sailing/ws/ITFDiscountService.1cws'));
+        global $USER;
+        $this->BASKET_PRICE = $price;
+        $connect = new Docking();
+        $pain = new GetBonuce($connect->connect1C('http://172.16.20.113:80/testing_sailing/ws/ITFDiscountService.1cws'));
 
-    $pain->getAllData();
-    $querr = new DBConnect();
-    $this->setLocData($pain);
-    $this->putDatabase($querr);
+        $pain->getAllData();
+        $querr = new DBConnect();
+        $this->setLocData($pain);
+        $this->putDatabase($querr);
+        $this->getUserPhone();
+        $this->showData($querr);
+    }
 
+    private function showData($querr){
+        echo(Loc::getMessage("YOUR BALANCE").  $querr->getBalance($this->PHONE_CARD_NUMBER).
+            Loc::getMessage("AUTOMATIC WRITE-OFF"));
     }
 
     private function setLocData($pain){
@@ -77,8 +92,27 @@ class Disnuts
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
     public function discActions(){
-        $PHONE_NUMBER = $_REQUEST['coupon'];
-        $gd = new getDiscount($PHONE_NUMBER, $this->BASKET_PRICE);
-        return $gd->calculateDisc();
+        try {
+            $gd = new getDiscount($this->PHONE_CARD_NUMBER, $this->BASKET_PRICE);
+            return $gd->calculateDisc();
+        }catch (\ErrorException $e){
+            echo($e->getMessage());
+            return 0;
+        }
     }
+
+    private function getUserPhone(){
+        $iContact = (new \CUser)->GetID();
+        $curUser = CUser::GetByID($iContact)->fetch();
+        $this->PHONE_CARD_NUMBER = $curUser["PERSONAL_PHONE"];
+        $score = new DeepScore($iContact, $curUser["PERSONAL_PHONE"]);
+    }
+
+    /**
+     * @throws ErrorException
+     */
+    function exceptions_error_handler($severity, $message, $filename, $lineno) {
+        throw new ErrorException($message, 0, $severity, $filename, $lineno);
+    }
+
 }
