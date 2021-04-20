@@ -1,6 +1,8 @@
 <?php
 
-    class GetBonuce
+use Bitrix\Main\Localization\Loc;
+
+class GetBonuce
     {
         private $result; //result of 1C request
         private $client; //SOAP client of connection
@@ -12,6 +14,7 @@
         private $card_names = array();
         private $phone_numbers = array();
         private $cards_balance = array();
+        private $arr_size;
 
         public function __construct($client)
         {
@@ -20,21 +23,22 @@
 
         public function getAllData(){
             $params = array(
-                'ДатаЗапроса' => date('Y-m-d H:i:s')
+                Loc::getMessage("QUERRY_DATE") => date('Y-m-d H:i:s')
             );
             $this->result = $this->client->ПолучитьДанныеОКартах($params);
             $this->setAllData();
         }
 
-        private function getBalance(){
+        final function getBalance(): array
+        {
             $tmp_arr = array_map();
             foreach($this->arr_id as $key){
                 $params = array(
-                    'ИдентификаторКарты' => $key,
-                    'ДатаЗапроса' => date('Y-m-d H:i:s')
+                    Loc::getMessage("CARDID") => $key,
+                    Loc::getMessage("QUERRY_DATE") => date('Y-m-d H:i:s')
                 );
                 $result = $this->client->ПолучитьОстатокБонусов($params);
-                $tmp = $result->{'return'}->{'РезультатЗапроса'}->{'КоличествоБаллов'};
+                $tmp = $result->{'return'}->{Loc::getMessage("QUERRY_RESULT")}->{Loc::getMessage("BALANCE")};
                 $tmp_arr[$key] = $tmp;
                 //Доступ к бонусам по ИД:
                 //$tmp_arr[$key];
@@ -45,7 +49,6 @@
         private function setBalance(){
             $tmp_arr = $this->getBalance();
             $this->cards_balance = $tmp_arr;
-            var_dump($this->cards_balance);
         }
 
         private function setAllData(){
@@ -59,57 +62,89 @@
         }
 
         private function setIDs(){
-            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
+            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->arr_id[$i] = $key->{'ИдентификаторКарты'};
+                $this->arr_id[$i] = $key->{Loc::getMessage("CARDID")};
                 $i++;
             }
 
         }
 
         private function setProgID(){
-            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
+            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->prog_id[$i] = $key->{'ИдентификаторБонуснойПрограммы'};
+                $this->prog_id[$i] = $key->{Loc::getMessage("LOYALITY_PROGID")};
                 $i++;
             }
         }
 
         private function setOwners(){
-            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
+            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->owners[$i] = $key->{'ВладелецКарты'};
+                $this->owners[$i] = $key->{Loc::getMessage("CARD_OWNER")};
                 $i++;
             }
         }
 
         private function setPeriods(){
-            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
+            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->periods[$i] = $key->{'Период'};
+                $this->periods[$i] = $key->{Loc::getMessage("PERIOD")};
                 $i++;
             }
         }
 
         private function setCardNames(){
-            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
+            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->card_names[$i] = $key->{'НаименованиеКарты'};
+                $this->card_names[$i] = $key->{Loc::getMessage("CARDNAME")};
                 $i++;
             }
         }
 
         private function setPhoneNumbers(){
-            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
-            $i = 0;
+            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
             foreach($tmp_arr as $key){
-                $this->phone_numbers[$i] = $key->{'НомерТелефона'};
-                $i++;
+                $this->phone_numbers[] = $key->{Loc::getMessage("PHONE")};
             }
         }
+
+        /**
+         * @return array
+         */
+        public function getPhoneNumbers(): array
+        {
+            return $this->phone_numbers;
+        }
+
+        public function getLogin(): array
+        {
+            return $this->owners;
+        }
+
+        public function getSize(): int
+        {
+            return count($this->owners);
+        }
+
+        public function getCadrIDs(): array
+        {
+            return $this->arr_id;
+        }
+
+        public function getCardBal(): array
+        {
+            return $this->cards_balance;
+        }
+
+        public function getCardNames(): array
+        {
+            return $this->card_names;
+        }
+
     }

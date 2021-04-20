@@ -1,7 +1,7 @@
 <?php
 Class Disnuts extends CModule
 {
-    var $MODULE_ID = "dull";
+    var $MODULE_ID = "disnuts";
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
     var $MODULE_NAME;
@@ -19,8 +19,8 @@ Class Disnuts extends CModule
             $this->MODULE_VERSION = $arModuleVersion["VERSION"];
             $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
         }
-        $this->MODULE_NAME = "Пустой модуль";
-        $this->MODULE_DESCRIPTION = "Это пустышка модуля";
+        $this->MODULE_NAME = "Модуль использования дисконтных карт бонусов из 1С Розница";
+        $this->MODULE_DESCRIPTION = "Альфа версия";
     }
 
     function DoInstall()
