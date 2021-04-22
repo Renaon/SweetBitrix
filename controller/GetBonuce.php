@@ -38,7 +38,7 @@ class GetBonuce
                     Loc::getMessage("QUERRY_DATE") => date('Y-m-d H:i:s')
                 );
                 $result = $this->client->ПолучитьОстатокБонусов($params);
-                $tmp = $result->{'return'}->{Loc::getMessage("QUERRY_RESULT")}->{Loc::getMessage("BALANCE")};
+                $tmp = $result->{'return'}->{'РезультатЗапроса'}->{'КоличествоБаллов'};
                 $tmp_arr[$key] = $tmp;
                 //Доступ к бонусам по ИД:
                 //$tmp_arr[$key];
@@ -62,55 +62,55 @@ class GetBonuce
         }
 
         private function setIDs(){
-            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
+            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->arr_id[$i] = $key->{Loc::getMessage("CARDID")};
+                $this->arr_id[$i] = $key->{ИдентификаторКарты};
                 $i++;
             }
 
         }
 
         private function setProgID(){
-            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
+            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->prog_id[$i] = $key->{Loc::getMessage("LOYALITY_PROGID")};
+                $this->prog_id[$i] = $key->{'ИдентификаторБонуснойПрограммы'};
                 $i++;
             }
         }
 
         private function setOwners(){
-            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
+            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->owners[$i] = $key->{Loc::getMessage("CARD_OWNER")};
+                $this->owners[$i] = $key->{'ВладелецКарты'};
                 $i++;
             }
         }
 
         private function setPeriods(){
-            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
+            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->periods[$i] = $key->{Loc::getMessage("PERIOD")};
+                $this->periods[$i] = $key->{'Период'};
                 $i++;
             }
         }
 
         private function setCardNames(){
-            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
+            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
             $i = 0;
             foreach($tmp_arr as $key){
-                $this->card_names[$i] = $key->{Loc::getMessage("CARDNAME")};
+                $this->card_names[$i] = $key->{'НаименованиеКарты'};
                 $i++;
             }
         }
 
         private function setPhoneNumbers(){
-            $tmp_arr = $this->result->{'return'}->{Loc::getMessage("TABLE")};
+            $tmp_arr = $this->result->{'return'}->{'СтрокиТаблицы'};
             foreach($tmp_arr as $key){
-                $this->phone_numbers[] = $key->{Loc::getMessage("PHONE")};
+                $this->phone_numbers[] = $key->{НомерТелефона};
             }
         }
 

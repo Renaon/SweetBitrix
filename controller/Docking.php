@@ -1,4 +1,7 @@
 <?php
+
+use Bitrix\Main\Localization\Loc;
+
 ini_set('soap.wsdl_cache_enabled', 0 );
 ini_set('soap.wsdl_cache_ttl', 0);
 
@@ -28,12 +31,11 @@ class Docking{
         try {
             $this->client = new SoapClient($this->getWSDL($url), $this->getOptions());
         }catch(SoapFault $e) {
-            trigger_error('Ошибка подключения или внутренняя ошибка сервера. Не удалось связаться с базой 1С.', E_USER_ERROR);
-            var_dump($e);
+            trigger_error(Loc::getMessage("SERVER_ERROR"), E_USER_ERROR);
         }
 
         if (is_soap_fault($this->client)){
-            trigger_error('Ошибка подключения или внутренняя ошибка сервера. Не удалось связаться с базой 1С.', E_ERROR);
+            trigger_error(Loc::getMessage("SERVER_ERROR"), E_ERROR);
             return null;
         }
         return $this->client;
